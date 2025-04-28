@@ -1,0 +1,195 @@
+.focuspage-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+.focuspage-wrapper {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(315deg, rgba(101, 0, 94, 1) 3%, rgba(60, 132, 206, 1) 38%, rgba(48, 238, 226, 1) 68%, rgba(255, 25, 25, 1) 98%);
+    animation: gradient 15s ease infinite;
+    background-size: 400% 400%;
+  }
+
+.sidebar {
+    width: 100px;
+    background-color: white;
+    box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1.5rem;
+    flex-shrink: 0;
+  }
+
+/* Icon + Text container */
+.sidebar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 12px;
+    border-radius: 12px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+
+/* Icon style */
+.sidebar-icon {
+    font-size: 2rem;
+    color: #333;
+}
+
+/* Text under icon */
+.sidebar-text {
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+    color: #444;
+}
+
+/* Hover effect */
+.sidebar-item:hover {
+    background-color: #dbeafe; /* light blue background */
+}
+
+.sidebar-item:hover .sidebar-icon,
+.sidebar-item:hover .sidebar-text {
+    color: #1e3a8a; /* dark blue text/icon */
+}
+
+/* Timer Sidebar container */
+.timer-sidebar-left {
+    position: fixed;
+    top: 0;
+    left: 100px; /* Position next to the sidebar */
+    width: 300px; /* Timer sidebar width */
+    height: 100vh;
+    background-color: white;
+    box-shadow: -2px 0px 8px rgba(0, 0, 0, 0.2); /* Optional shadow for separation */
+    z-index: 20; /* Ensure it is above the sidebar */
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+}
+
+.timer-sidebar-wrapper {
+    width: 300px;
+    background-color: white;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+.layout-flex {
+    display: flex;
+    flex: 1;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+.main-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    background: linear-gradient(
+      315deg,
+      rgba(101, 0, 94, 1) 3%,
+      rgba(60, 132, 206, 1) 38%,
+      rgba(48, 238, 226, 1) 68%,
+      rgba(255, 25, 25, 1) 98%
+    );
+    animation: gradient 15s ease infinite;
+    background-size: 400% 400%;
+    background-attachment: fixed;
+    text-align: center;
+    z-index: 1;
+  }
+  
+  @keyframes gradient {
+    0% {
+      background-position: 0% 0%;
+    }
+    50% {
+      background-position: 100% 100%;
+    }
+    100% {
+      background-position: 0% 0%;
+    }
+  }
+
+/*memory card*/
+.memo-card {
+  width: 600px;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.1); /* Transparent background */
+  border: 4px solid rgb(118, 160, 252); /* Initial border */
+  position: relative;
+  overflow: hidden;
+  z-index: 10;
+}
+
+/* Wave effect container */
+.focuspage-waves-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 12em;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+/* Wave effect styling */
+.focuspage-wave {
+    background: rgb(255 255 255 / 25%);
+    border-radius: 1000% 1000% 0 0;
+    position: absolute;
+    width: 200%;
+    height: 12em;
+    animation: focuspage-waveAnim 10s -3s linear infinite;
+    transform: translate3d(0, 0, 0);
+    opacity: 0.8;
+    bottom: 0;
+    left: 0;
+  }
+  
+  .focuspage-wave2 {
+    bottom: -1.25em;
+    animation: focuspage-waveAnim 18s linear reverse infinite;
+    opacity: 0.8;
+  }
+  
+  .focuspage-wave3 {
+    bottom: -2.5em;
+    animation: focuspage-waveAnim 20s -1s reverse infinite;
+    opacity: 0.9;
+  }
+
+/* Wave animation */
+@keyframes focuspage-waveAnim {
+    2% {
+        transform: translateX(1);
+    }
+    25% {
+        transform: translateX(-25%);
+    }
+    50% {
+        transform: translateX(-50%);
+    }
+    75% {
+        transform: translateX(-25%);
+    }
+    100% {
+        transform: translateX(1);
+    }
+}
+
+

@@ -1,0 +1,71 @@
+/* TimerCard.css */
+
+.timer-card {
+    height: 480px;
+    width: 600px;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.1); /* Transparent background */
+    border: 4px solid rgb(118, 160, 252); /* Initial border */
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .timer-title {
+    font-size: 2rem; /* Title size */
+    padding-bottom: 10px;
+    font-weight: bold;
+    text-align: center;
+    color: #ffffff; /* White text */
+  }
+  
+  .timer-display {
+    font-size: 10rem; /* Large font for time */
+    font-weight: bold;
+    text-align: center;
+    color: #ffffff; /* White text */
+  }
+  
+  .mode-button {
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #ffffff; /* Change text color to white */
+    border: 2px solid rgb(118, 160, 252); /* Initial border */
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Add text shadow */
+}
+  .mode-button:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Slightly lighter on hover */
+    border-color: #ffffff; /* White border on hover */
+  }
+  .mode-button.active {
+    background-color: rgba(255, 255, 255, 0.3); /* Highlighted background */
+    border-color: #ffffff; /* White border for active mode */
+    color: #ffffff; /* White text for active mode */
+  }
+  
+.start-pause-button {
+    padding: 12px 24px;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    border: none; /* No border */
+    transition: background-color 0.3s, transform 0.2s;
+    color: white; /* Default text color */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Add text shadow for visibility */
+    border: 2px solid rgba(255, 255, 255, 0.553);
+}
+
+.start-pause-button:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.start-button {
+    background-color: rgb(118, 160, 252); /* Green */
+}
+
+.pause-button {
+    background-color: #f96683; /* Red */
+}

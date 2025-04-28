@@ -1,0 +1,35 @@
+@import "tailwindcss";
+@keyframes gradient-glow {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .before\:animate-glow::before {
+    animation: gradient-glow 8s ease infinite;
+    background-size: 200% 200%;
+    transition: opacity 1.5s ease;
+  }
+  
+@font-face {
+  font-family: 'Handwritten';
+  src: url('./assets/Fonts/RandomWednesday.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Neon';
+  src: url('./assets/Fonts/NeonWorldDemo.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Qurova';
+  src: url('./assets/Fonts/QurovademoSemibold.otf') format('truetype');
+}
+@font-face {
+  font-family: 'Party';
+  src: url('./assets/Fonts/PartyVibes.otf') format('truetype');
+}
