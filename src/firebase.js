@@ -1,9 +1,9 @@
-/* eslint-disable no-unused-vars */
 // Import necessary Firebase SDKs
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth"; // Add Firebase Authentication
+import { getAuth } from "firebase/auth"; // Firebase Authentication
+// If you need Analytics, you can keep this line; otherwise, remove it.
+// import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -25,5 +25,7 @@ export const db = getFirestore(app);
 // Initialize Firebase Authentication
 export const auth = getAuth(app); // Export auth for use in your app
 
-// Initialize Analytics
-const analytics = getAnalytics(app);
+// Uncomment if you're using Analytics
+// const analytics = getAnalytics(app);
+// Export analytics if needed
+// export { analytics };

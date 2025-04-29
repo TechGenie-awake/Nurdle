@@ -20,7 +20,7 @@ const ProfilePage = () => {
         const userDocSnap = await getDoc(userDocRef);
         if (userDocSnap.exists()) {
           const data = userDocSnap.data();
-          console.log("Fetched user data:", data); // ✅ Log here
+          console.log("Fetched user data:", data);
           setUserData(data);
         } else {
           console.log("No user document found in Firestore.");
@@ -42,28 +42,44 @@ const ProfilePage = () => {
     }
   };
 
-  if (!userData) return <div className="text-white p-10">Loading...</div>;
+  const handleBackToHome = () => {
+    navigate("/"); // Navigate to the home page
+  };
+
+  if (!userData) return <div className="text-gray-500 p-10">Loading...</div>;
 
   return (
-    <div className="text-red-500 p-10">
-      <h1 className="text-3xl mb-4">Profile</h1>
-      <div className="space-y-4">
-        <div>
-          <strong>Username: </strong>
-          <span>{userData ? userData.username || "N/A" : "N/A"}</span>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-10">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
+          Profile
+        </h1>
+        <div className="space-y-4">
+          <div className="flex justify-between">
+            <strong className="text-gray-600">Username:</strong>
+            <span className="text-gray-800">{userData.username || "N/A"}</span>
+          </div>
+          <div className="flex justify-between">
+            <strong className="text-gray-600">Email:</strong>
+            <span className="text-gray-800">{userData.email || "N/A"}</span>
+          </div>
         </div>
-        <div>
-          <strong>Email: </strong>
-          <span>{userData ? userData.email || "N/A" : "N/A"}</span>
+
+        <div className="mt-6 space-y-4">
+          <button
+            onClick={handleBackToHome}
+            className="w-full bg-blue-600 text-white px-6 py-3 rounded-full text-xl hover:bg-blue-700 transition duration-200"
+          >
+            Back to Home
+          </button>
+          <button
+            onClick={handleLogout}
+            className="w-full bg-red-600 text-white px-6 py-3 rounded-full text-xl hover:bg-red-700 transition duration-200"
+          >
+            Logout
+          </button>
         </div>
       </div>
-
-      <button
-        onClick={handleLogout}
-        className="mt-6 bg-red-600 text-white px-6 py-3 rounded-full text-xl hover:bg-red-700"
-      >
-        Logout
-      </button>
     </div>
   );
 };

@@ -16,7 +16,7 @@ const ToFocus = () => {
           {/* Soft glow circle with purplish tone */}
           <div
             className="absolute w-[680px] h-[480px] rounded-full 
-            bg-gradient-to-br from-[#4da6ff] via-[#5cb8ff] to-[#85d1ff]
+            bg-gradient-to-br from-[#3d60fd] via-[#3b7cf6] to-[#1a81ff]
             opacity-0 group-hover:opacity-40 blur-3xl 
             transition-opacity duration-1000 pointer-events-none"
           ></div>

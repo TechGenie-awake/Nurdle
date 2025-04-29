@@ -1,47 +1,49 @@
 import React, { useState } from "react";
-import { FaHome, FaTasks, FaUser, FaCog } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import { RxLapTimer } from "react-icons/rx";
 import { IoLogoDiscord } from "react-icons/io5";
 import { LuNotebookText } from "react-icons/lu";
+import { AiFillCalendar } from "react-icons/ai";
 import { Link } from "react-router-dom";
+
 import TimerSidebar from "./TimerSidebar";
 import PomodoroTimer from "./PomodoroTimer";
 import CommunitySidebar from "./CommunitySidebar";
 import Community from "./Community";
 import MemoSidebar from "./MemoSidebar";
-import Memo from "./Memo"; // Import the Memo component
+import Memo from "./Memo";
+import CalendarSidebar from "./CalendarSidebar";
+import CalendarView from "./CalendarView";
+
 import "./FocusPage.css";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase";
 
 const FocusPage = () => {
-  const [activeSection, setActiveSection] = useState("home"); // which icon is selected
+  const [activeSection, setActiveSection] = useState("home");
   const [selectedTask, setSelectedTask] = useState(null);
-  const [selectedMemo, setSelectedMemo] = useState(null); // State for selected memo
-  const [selectedCommunity, setSelectedCommunity] = useState(null); // State for selected community
+  const [selectedMemo, setSelectedMemo] = useState(null);
+  const [selectedCommunity, setSelectedCommunity] = useState(null);
+  const [user, loading, error] = useAuthState(auth);
 
   const handleSidebarClick = (section) => {
-    if (section === "home") {
+    if (section === "home" || activeSection === section) {
       setActiveSection("home");
       setSelectedTask(null);
-      setSelectedMemo(null); // Clear selected memo when going to home
-      setSelectedCommunity(null); // Clear selected community when going to home
-      return;
-    }
-
-    if (activeSection === section) {
-      // toggle off if same icon is clicked
-      setActiveSection("home");
-      setSelectedTask(null);
-      setSelectedMemo(null); // Clear selected memo when toggling off
-      setSelectedCommunity(null); // Clear selected community when toggling off
+      setSelectedMemo(null);
+      setSelectedCommunity(null);
     } else {
       setActiveSection(section);
       setSelectedTask(null);
-      setSelectedMemo(null); // Clear selected memo when switching sections
-      setSelectedCommunity(null); // Clear selected community when switching sections
+      setSelectedMemo(null);
+      setSelectedCommunity(null);
     }
   };
 
   const isSidebarVisible = (section) => activeSection === section;
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div className="focuspage-container">
@@ -51,12 +53,7 @@ const FocusPage = () => {
           <Link
             to="/"
             className="sidebar-item"
-            onClick={() => {
-              setActiveSection("home");
-              setSelectedTask(null);
-              setSelectedMemo(null); // Clear selected memo when going to home
-              setSelectedCommunity(null); // Clear selected community when going to home
-            }}
+            onClick={() => handleSidebarClick("home")}
           >
             <FaHome className="sidebar-icon" />
             <div className="sidebar-text">Home</div>
@@ -72,18 +69,18 @@ const FocusPage = () => {
 
           <div
             className="sidebar-item"
-            onClick={() => handleSidebarClick("tasks")}
-          >
-            <FaTasks className="sidebar-icon" />
-            <div className="sidebar-text">Tasks</div>
-          </div>
-
-          <div
-            className="sidebar-item"
             onClick={() => handleSidebarClick("memo")}
           >
             <LuNotebookText className="sidebar-icon" />
             <div className="sidebar-text">Memo</div>
+          </div>
+
+          <div
+            className="sidebar-item"
+            onClick={() => handleSidebarClick("calendar")}
+          >
+            <AiFillCalendar className="sidebar-icon" />
+            <div className="sidebar-text">Calendar</div>
           </div>
 
           <div
@@ -93,14 +90,6 @@ const FocusPage = () => {
             <IoLogoDiscord className="sidebar-icon" />
             <div className="sidebar-text">Community</div>
           </div>
-
-          <div
-            className="sidebar-item"
-            onClick={() => handleSidebarClick("settings")}
-          >
-            <FaCog className="sidebar-icon" />
-            <div className="sidebar-text">Settings</div>
-          </div>
         </aside>
 
         {/* Layout */}
@@ -108,32 +97,28 @@ const FocusPage = () => {
           {/* Conditional Sidebars */}
           {isSidebarVisible("timer") && (
             <div className="timer-sidebar-wrapper">
-              <TimerSidebar setSelectedTask={setSelectedTask} />
-            </div>
-          )}
-
-          {isSidebarVisible("tasks") && (
-            <div className="timer-sidebar-wrapper">
-              <div className="p-4 w-full h-full bg-white shadow-md">
-                <h2 className="text-lg font-bold text-gray-700 mb-4">
-                  Your Tasks
-                </h2>
-                <p className="text-sm text-gray-500">
-                  Tasks Sidebar coming soon...
-                </p>
-              </div>
+              <TimerSidebar
+                userId={user?.uid}
+                setSelectedTask={setSelectedTask}
+              />
             </div>
           )}
 
           {isSidebarVisible("memo") && (
             <div className="timer-sidebar-wrapper">
-              <MemoSidebar setSelectedMemo={setSelectedMemo} />
+              <MemoSidebar setSelectedMemo={setSelectedMemo} user={user} />
             </div>
           )}
 
           {isSidebarVisible("community") && (
             <div className="timer-sidebar-wrapper">
               <CommunitySidebar onSelect={setSelectedCommunity} />
+            </div>
+          )}
+
+          {isSidebarVisible("calendar") && (
+            <div className="timer-sidebar-wrapper">
+              <CalendarSidebar />
             </div>
           )}
 
@@ -169,49 +154,38 @@ const FocusPage = () => {
                   </div>
                 )}
 
-                {activeSection === "tasks" && (
+                {activeSection === "community" && selectedCommunity ? (
+                  <Community selectedCommunity={selectedCommunity} />
+                ) : activeSection === "community" ? (
                   <div className="bg-white p-6 rounded-lg shadow-md text-gray-600">
-                    <h2 className="text-xl font-semibold mb-2">Tasks</h2>
+                    <h2 className="text-2xl font-semibold mb-2">Community</h2>
                     <p className="text-sm text-gray-500">
-                      Tasks list placeholder – Add, edit, and manage tasks
-                      coming soon.
+                      Select a community from the sidebar to view it here.
                     </p>
                   </div>
-                )}
+                ) : null}
 
-                {activeSection === "community" && (
-                  <>
-                    {selectedCommunity ? (
-                      <Community selectedCommunity={selectedCommunity} />
-                    ) : (
-                      <div className="bg-white p-6 rounded-lg shadow-md text-gray-600">
-                        <h2 className="text-2xl font-semibold mb-2">
-                          Community
-                        </h2>
-                        <p className="text-sm text-gray-500">
-                          Select a community from the sidebar to view it here.
-                        </p>
-                      </div>
-                    )}
-                  </>
-                )}
-
-                {activeSection === "settings" && (
-                  <div className="bg-white p-6 rounded-lg shadow-md text-gray-600">
-                    <h2 className="text-xl font-semibold mb-2">Settings</h2>
-                    <p className="text-sm text-gray-500">
-                      Customize your preferences here.
-                    </p>
-                  </div>
-                )}
-
-                {activeSection === "memo" && selectedMemo && (
-                  <div className="memo-card">
+                {activeSection === "memo" && selectedMemo ? (
+                  <div className="memo-card bg-white p-6 rounded-lg shadow-md text-gray-600">
                     <h2 className="text-xl font-semibold mb-2">Memo</h2>
                     <Memo
                       selectedMemo={selectedMemo}
                       setSelectedMemo={setSelectedMemo}
+                      user={user}
                     />
+                  </div>
+                ) : activeSection === "memo" ? (
+                  <div className="bg-white p-6 rounded-lg shadow-md text-gray-600">
+                    <h2 className="text-xl font-semibold mb-2">Memo</h2>
+                    <p className="text-sm text-gray-500">
+                      Select a memo from the sidebar to view it here.
+                    </p>
+                  </div>
+                ) : null}
+
+                {activeSection === "calendar" && (
+                  <div className="calendar-container">
+                    <CalendarView user={user} />
                   </div>
                 )}
               </>

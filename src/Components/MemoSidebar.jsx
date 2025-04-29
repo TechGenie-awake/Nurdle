@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { db } from "../firebase"; // Assuming firebase is properly initialized
+import { db } from "../firebase";
 import {
   collection,
   addDoc,
@@ -7,17 +7,23 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
+  query,
+  where,
 } from "firebase/firestore";
 import { MdLibraryAdd } from "react-icons/md";
 
-const MemoSidebar = ({ setSelectedMemo }) => {
+const MemoSidebar = ({ setSelectedMemo, user }) => {
   const [memos, setMemos] = useState([]);
   const [memoTitle, setMemoTitle] = useState("");
   const [editingMemoId, setEditingMemoId] = useState(null);
 
-  // Fetch memos from Firestore
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, "memos"), (snapshot) => {
+    if (!user) return;
+
+    const memosRef = collection(db, "memos");
+    const userMemosQuery = query(memosRef, where("userId", "==", user.uid));
+
+    const unsub = onSnapshot(userMemosQuery, (snapshot) => {
       const memoData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -26,28 +32,31 @@ const MemoSidebar = ({ setSelectedMemo }) => {
     });
 
     return () => unsub();
-  }, []);
+  }, [user]);
 
-  // Clear input fields after adding or updating a memo
   const clearInputs = () => {
     setMemoTitle("");
     setEditingMemoId(null);
   };
 
-  // Add or update memo in Firestore
   const addOrUpdateMemo = async () => {
     if (!memoTitle.trim()) return;
 
     const memoData = {
       title: memoTitle.trim(),
+      userId: user.uid,
+      content: "",
+      createdAt: new Date(),
     };
 
     try {
       if (editingMemoId) {
         const memoRef = doc(db, "memos", editingMemoId);
-        await updateDoc(memoRef, memoData);
+        await updateDoc(memoRef, { title: memoTitle.trim() });
       } else {
-        await addDoc(collection(db, "memos"), memoData);
+        const docRef = await addDoc(collection(db, "memos"), memoData);
+        setMemos((prev) => [...prev, { id: docRef.id, ...memoData }]);
+        setSelectedMemo({ id: docRef.id, ...memoData });
       }
       clearInputs();
     } catch (error) {
@@ -55,18 +64,16 @@ const MemoSidebar = ({ setSelectedMemo }) => {
     }
   };
 
-  // Edit selected memo
   const startEdit = (memo) => {
     setMemoTitle(memo.title);
     setEditingMemoId(memo.id);
-    setSelectedMemo(memo); // Set the selected memo for the main content
+    setSelectedMemo(memo);
   };
 
-  // Delete memo
   const deleteMemo = async (id) => {
     try {
       await deleteDoc(doc(db, "memos", id));
-      setMemos((prevMemos) => prevMemos.filter((memo) => memo.id !== id));
+      setMemos((prev) => prev.filter((memo) => memo.id !== id));
     } catch (error) {
       console.error("Error deleting memo:", error);
     }
@@ -92,13 +99,12 @@ const MemoSidebar = ({ setSelectedMemo }) => {
         </button>
       </div>
 
-      {/* Memo List */}
       <div className="space-y-4">
         {memos.map((memo) => (
           <div
             key={memo.id}
             className="border p-3 rounded bg-gray-50 shadow-sm flex justify-between items-start cursor-pointer"
-            onClick={() => startEdit(memo)} // Set selected memo on click
+            onClick={() => startEdit(memo)}
           >
             <div>
               <p className="font-semibold">{memo.title}</p>

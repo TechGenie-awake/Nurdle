@@ -25,7 +25,14 @@ const NavigationBar = ({ user }) => {
           {user ? (
             <>
               {/* Display Username */}
-              <span className="text-white">{username}</span>
+              <span
+                className="text-white font-bold text-lg bg-gray-800 rounded px-2 py-1 shadow-md"
+                style={{
+                  textShadow: "1px 1px 2px rgba(0, 0, 0, 0.7)", // Text shadow for better visibility
+                }}
+              >
+                {username}
+              </span>
               {/* Profile Link */}
               <Link to="/profile">
                 <div className="w-10 h-10 rounded-full bg-black/40 flex items-center justify-center text-white hover:bg-white/30 cursor-pointer">

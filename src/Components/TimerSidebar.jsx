@@ -9,7 +9,7 @@ import {
   doc,
 } from "firebase/firestore";
 
-const TimerSidebar = ({ setSelectedTask }) => {
+const TimerSidebar = ({ setSelectedTask, userId }) => {
   const [tasks, setTasks] = useState([]);
   const [taskInput, setTaskInput] = useState("");
   const [focusTime, setFocusTime] = useState(""); // Set default value to 25
@@ -17,16 +17,20 @@ const TimerSidebar = ({ setSelectedTask }) => {
   const [longBreak, setLongBreak] = useState(""); // Set default value to 15
   const [editingTaskId, setEditingTaskId] = useState(null);
 
+  // Fetch tasks for the specific user
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, "tasks"), (snapshot) => {
-      const taskData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setTasks(taskData);
-    });
+    const unsub = onSnapshot(
+      collection(db, "users", userId, "tasks"),
+      (snapshot) => {
+        const taskData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setTasks(taskData);
+      }
+    );
     return () => unsub();
-  }, []);
+  }, [userId]);
 
   const clearInputs = () => {
     setTaskInput("");
@@ -41,17 +45,17 @@ const TimerSidebar = ({ setSelectedTask }) => {
 
     const taskData = {
       name: taskInput.trim(),
-      focusTime: focusTime, // Directly using the state value
-      shortBreak: shortBreak,
-      longBreak: longBreak,
+      focusTime: focusTime || 25, // Default to 25 if not provided
+      shortBreak: shortBreak || 5, // Default to 5 if not provided
+      longBreak: longBreak || 15, // Default to 15 if not provided
     };
 
     try {
       if (editingTaskId) {
-        const taskRef = doc(db, "tasks", editingTaskId);
+        const taskRef = doc(db, "users", userId, "tasks", editingTaskId);
         await updateDoc(taskRef, taskData);
       } else {
-        await addDoc(collection(db, "tasks"), taskData);
+        await addDoc(collection(db, "users", userId, "tasks"), taskData);
       }
       clearInputs();
     } catch (error) {
@@ -61,7 +65,7 @@ const TimerSidebar = ({ setSelectedTask }) => {
 
   const deleteTask = async (id) => {
     try {
-      await deleteDoc(doc(db, "tasks", id)); // Delete from Firestore
+      await deleteDoc(doc(db, "users", userId, "tasks", id)); // Delete from Firestore
       setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id)); // Update local state
     } catch (error) {
       console.error("Error deleting task:", error);
