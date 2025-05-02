@@ -12,8 +12,7 @@ import CommunitySidebar from "./CommunitySidebar";
 import Community from "./Community";
 import MemoSidebar from "./MemoSidebar";
 import Memo from "./Memo";
-import CalendarSidebar from "./CalendarSidebar";
-import CalendarView from "./CalendarView";
+import CalendarApp from "./CalendarApp"; // Import the new Calendar component
 
 import "./FocusPage.css";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -116,12 +115,6 @@ const FocusPage = () => {
             </div>
           )}
 
-          {isSidebarVisible("calendar") && (
-            <div className="timer-sidebar-wrapper">
-              <CalendarSidebar />
-            </div>
-          )}
-
           {/* Main Content Area */}
           <main className="main-content">
             {selectedTask ? (
@@ -185,7 +178,7 @@ const FocusPage = () => {
 
                 {activeSection === "calendar" && (
                   <div className="calendar-container">
-                    <CalendarView user={user} />
+                    <CalendarApp /> {/* Use the new Calendar component */}
                   </div>
                 )}
               </>
